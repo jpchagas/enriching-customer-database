@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
@@ -23,7 +23,24 @@ class People(Base):
         self.photo=photo
 
     def __repr__(self):
-        return '<User %r>' % (self.name)
+        return '<People %r>' % (self.name)
 
 class Address(Base):
-    __tallename__='address'
+    __tablename__='address'
+
+    id = Column(Integer,primary_key = True)
+    pessoa_id =Column(Integer,ForeignKey("people.id"),nullable=False)
+    street = Column(String(50),nullable=False)
+    number = Column(String(50),nullable=False)
+    city = Column(String(50),nullable=False)
+    state = Column(String(50),nullable=False)
+
+    def __init__(self, pessoa_id=None,street=None,number=None,city=None,state=None):
+        self.pessoa_id = pessoa_id
+        self.street = street
+        self.number = number
+        self.city = city
+        self.state = state
+
+    def __repr__(self):
+        return '<Address %r>' % (self.street)
