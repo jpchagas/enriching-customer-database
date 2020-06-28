@@ -2,6 +2,7 @@ from flask import Flask , redirect
 from model.models import Base , People, Address
 from flask_sqlalchemy import SQLAlchemy
 import requests
+import json
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://dba:pegasos93@localhost:3306/rbsdb'
@@ -52,7 +53,9 @@ def updateapi():
 
 @app.route('/userbygenderbycity')
 def userbygenderbycity():
-    pass
+    info = db.session.query(Address.city,People.gender,db.func.count(People.id)).join(Address, People.id == Address.pessoa_id).group_by(Address.city,People.gender).all()
+    print(info)
+    return json.dumps(info,indent=2)
     
 
 app.run(debug=True)
