@@ -1,0 +1,8 @@
+language: python
+python:
+  - "3.7"
+install: pip install -r requirements.txt
+deploy:
+    provider: heroku
+    api_key:
+        secure: "48430ed1-9602-444e-9163-f9994080868b"

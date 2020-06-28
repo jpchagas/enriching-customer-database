@@ -4,11 +4,12 @@ from flask_sqlalchemy import SQLAlchemy
 import requests
 import json
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://dba:pegasos93@database-1.cb90crkwttme.us-west-2.rds.amazonaws.com:3306/rbsdb'
-db = SQLAlchemy(app)
+application = Flask(__name__)
+application.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://admin:Flashpoint93.@database-1.cb90crkwttme.us-west-2.rds.amazonaws.com:3306/rbsdb'
+#application.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://dba:pegasos93@localhost:3306/rbsdb'
+db = SQLAlchemy(application)
 
-@app.before_first_request
+@application.before_first_request
 def setup():
     #Base.metadata.drop_all(bind=db.engine)
     Base.metadata.create_all(bind=db.engine)
@@ -18,7 +19,7 @@ def setup():
     #db.session.add(Address(new_people.id, 'teste',1234,'teste','teste'))
     #db.session.commit()
 
-@app.route('/update')
+@application.route('/update')
 def update():
     resp = requests.get('https://randomuser.me/api/').json()['results'][0]
     new_people = People(resp['name']['first'] + ' ' + resp['name']['last'],
@@ -40,18 +41,18 @@ def update():
     return redirect('/')
 
 
-@app.route('/')
+@application.route('/')
 def root():
     person = db.session.query(People).all()
     return u"<br>".join([u"{0}: {1}".format(p.name, p.email) for p in person])
 
-@app.route('/updateapi')
+@application.route('/updateapi')
 def updateapi():
     #resp = peoplecontroller.update_api()
     #return resp
     pass
 
-@app.route('/userbygenderbycity')
+@application.route('/userbygenderbycity')
 def userbygenderbycity():
     p ={}
     a = 1
@@ -64,5 +65,6 @@ def userbygenderbycity():
         a = a + 1
     return json.dumps(p,indent=2)
     
-
-app.run(debug=True)
+if __name__ == "__main__":
+    application.debug = True
+    application.run()
