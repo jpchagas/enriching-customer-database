@@ -5,12 +5,12 @@ import requests
 import json
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://dba:pegasos93@localhost:3306/rbsdb'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://dba:pegasos93@database-1.cb90crkwttme.us-west-2.rds.amazonaws.com:3306/rbsdb'
 db = SQLAlchemy(app)
 
 @app.before_first_request
 def setup():
-    Base.metadata.drop_all(bind=db.engine)
+    #Base.metadata.drop_all(bind=db.engine)
     Base.metadata.create_all(bind=db.engine)
     #new_people = People('Bob Jones', 'bob@gmail.com','username','password','gender','photo')
     #db.session.add(new_people)
@@ -53,9 +53,16 @@ def updateapi():
 
 @app.route('/userbygenderbycity')
 def userbygenderbycity():
+    p ={}
+    a = 1
     info = db.session.query(Address.city,People.gender,db.func.count(People.id)).join(Address, People.id == Address.pessoa_id).group_by(Address.city,People.gender).all()
-    print(info)
-    return json.dumps(info,indent=2)
+    print(type(info))
+    for i in info:
+        p[a] = {'city':i[0],
+                'gender':i[1],
+                'amout': i[2]}
+        a = a + 1
+    return json.dumps(p,indent=2)
     
 
 app.run(debug=True)
