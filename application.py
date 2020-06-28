@@ -11,7 +11,7 @@ db = SQLAlchemy(application)
 
 @application.before_first_request
 def setup():
-    #Base.metadata.drop_all(bind=db.engine)
+    Base.metadata.drop_all(bind=db.engine)
     Base.metadata.create_all(bind=db.engine)
     #new_people = People('Bob Jones', 'bob@gmail.com','username','password','gender','photo')
     #db.session.add(new_people)
