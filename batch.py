@@ -1,10 +1,10 @@
 import requests
 import schedule
 import time
-
-
+ 
 def batch():
-    requests.get('http://localhost:5000/update')
+    requests.get('https://ecdserver.herokuapp.com/update')
+    print("Requested")
 
 schedule.every(1).minutes.do(batch)
 
