@@ -3,11 +3,23 @@ from model.models import Base , People, Address
 from flask_sqlalchemy import SQLAlchemy
 import requests
 import json
+import atexit
+from apscheduler.scheduler import Scheduler
 
 application = Flask(__name__)
+
+cron = Scheduler(daemon=True)
+
 application.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://admin:Flashpoint93.@database-1.cb90crkwttme.us-west-2.rds.amazonaws.com:3306/rbsdb'
 #application.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://dba:pegasos93@localhost:3306/rbsdb'
 db = SQLAlchemy(application)
+cron.start()
+
+@cron.interval_schedule(minutes=1)
+def batch():
+    #requests.get('http://127.0.0.1:5000/update')
+    requests.get('https://ecdserver.herokuapp.com/update')
+    print('Requested')
 
 @application.before_first_request
 def setup():
@@ -57,7 +69,6 @@ def userbygenderbycity():
     p ={}
     a = 1
     info = db.session.query(Address.city,People.gender,db.func.count(People.id)).join(Address, People.id == Address.pessoa_id).group_by(Address.city,People.gender).all()
-    print(type(info))
     for i in info:
         p[a] = {'city':i[0],
                 'gender':i[1],
@@ -65,6 +76,8 @@ def userbygenderbycity():
         a = a + 1
     return json.dumps(p,indent=2)
     
+atexit.register(lambda: cron.shutdown(wait=False))
+
 if __name__ == "__main__":
     application.debug = True
     application.run()
