@@ -18,7 +18,7 @@ cron.start()
 @cron.interval_schedule(minutes=1)
 def batch():
     #requests.get('http://127.0.0.1:5000/update')
-    requests.get('https://ecdserver.herokuapp.com/update')
+    requests.get('https://enriching-customer-database.herokuapp.com//update')
     print('Requested')
 
 @application.before_first_request
