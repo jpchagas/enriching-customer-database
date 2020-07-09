@@ -10,7 +10,7 @@ application = Flask(__name__)
 
 cron = Scheduler(daemon=True)
 
-application.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://admin:Flashpoint93.@database-1.cb90crkwttme.us-west-2.rds.amazonaws.com:3306/rbsdb'
+application.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://j4h6pfu6j2hsgjsx:jnrhopjytnncg7ij@pqxt96p7ysz6rn1f.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/tqq7jin5tgyki2cl'
 #application.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://dba:pegasos93@localhost:3306/rbsdb'
 db = SQLAlchemy(application)
 cron.start()
